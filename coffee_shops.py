@@ -25,13 +25,19 @@ def calculate_distances(data, position):
 
 def calculate_distance(row, position):
     shop_position = float(row['x_coord']), float(row['y_coord'])
-    return math.sqrt(math.pow(shop_position[0] - position[0], 2) + math.pow(shop_position[1] - position[1], 2))
+    return round(math.sqrt(math.pow(shop_position[0] - position[0], 2) + math.pow(shop_position[1] - position[1], 2)), 4)
+
+def print_closest_three(shops):
+    shops = pd.DataFrame(shops).sort_values('distance')
+    print(shops[['name', 'distance']].head(3).to_string(index=False))
 
 def main(argv):
     x, y, url = get_arguments(argv)
     if(url != ''):
         shops = get_data(url)
         list_distances = calculate_distances(shops, (x, y))
+        shops['distance'] = list_distances
+        print_closest_three(shops=shops)
     input('Press enter to exit...')
  
 if __name__ == "__main__":
